@@ -1,26 +1,19 @@
 import { IconBtn } from "./IconBtn";
-// import { FaEdit, FaHeart, FaRegHeart, FaReply, FaTrash } from "react-icons/fa";
-// import { usePost } from "../contexts/PostContext";
-// import { CommentList } from "./CommentList";
-import React, { useState } from "react";
-// import { useAsyncFn } from "../hooks/useAsync";
-// import { createComment, deleteComment, toggleCommentLike, updateComment, } from "../services/comments";
-// import { CommentForm } from "./CommentForm";
-// import { useUser } from "../hooks/useUser";
+import { FaEdit, FaHeart, FaRegHeart, FaReply, FaTrash } from "react-icons/fa";
+import { usePost } from "../contexts/PostContext";
+import { CommentList } from "./CommentList";
+import { CommentForm } from "./CommentForm";
+import { useState } from "react";
+import { useAsyncFn } from "../hooks/useAsync";
+import { createComment, deleteComment, toggleCommentLike, updateComment, } from "../services/comments";
+import { useUser } from "../hooks/useUser";
 
 const dateFormatter = new Intl.DateTimeFormat(undefined, {
     dateStyle: "medium",
     timeStyle: "short",
 });
 
-export function Comment({
-    id,
-    message,
-    user,
-    createdAt,
-    likeCount,
-    likedByMe,
-}) {
+export function Comment({ id, message, user, createdAt, likeCount, likedByMe, }) {
     const [ areChildrenHidden, setAreChildrenHidden ] = useState(false);
     const [ isReplying, setIsReplying ] = useState(false);
     const [ isEditing, setIsEditing ] = useState(false);
@@ -39,19 +32,19 @@ export function Comment({
     const childComments = getReplies(id);
     const currentUser = useUser();
 
-    function onCommentReply(message) {
+    function onCommentReply(message: any) {
         return createCommentFn
             .execute({ postId: post.id, message, parentId: id })
-            .then(comment => {
+            .then((comment: { id: string; parentId: string; message: string; user: string; likeCount: number; }) => {
                 setIsReplying(false);
                 createLocalComment(comment);
             });
     }
 
-    function onCommentUpdate(message) {
+    function onCommentUpdate(message: any) {
         return updateCommentFn
             .execute({ postId: post.id, message, id })
-            .then(comment => {
+            .then((comment: { message: string; }) => {
                 setIsEditing(false);
                 updateLocalComment(id, comment.message);
             });
@@ -60,7 +53,7 @@ export function Comment({
     function onCommentDelete() {
         return deleteCommentFn
             .execute({ postId: post.id, id })
-            .then(comment => deleteLocalComment(comment.id));
+            .then((comment: { id: string; }) => deleteLocalComment(comment.id));
     }
 
     function onToggleCommentLike() {
@@ -107,17 +100,10 @@ export function Comment({
                     {user.id === currentUser.id && (
                         <>
                             <IconBtn
-                                onClick={() => setIsEditing(prev => !prev)}
-                                isActive={isEditing}
-                                Icon={FaEdit}
-                                aria-label={isEditing ? "Cancel Edit" : "Edit"}
+                                onClick={() => setIsEditing(prev => !prev)} isActive={isEditing} Icon={FaEdit} aria-label={isEditing ? "Cancel Edit" : "Edit"}
                             />
                             <IconBtn
-                                disabled={deleteCommentFn.loading}
-                                onClick={onCommentDelete}
-                                Icon={FaTrash}
-                                aria-label="Delete"
-                                color="danger"
+                                disabled={deleteCommentFn.loading} onClick={onCommentDelete} Icon={FaTrash} aria-label="Delete" color="danger"
                             />
                         </>
                     )}
@@ -128,33 +114,17 @@ export function Comment({
             </div>
             {isReplying && (
                 <div className="mt-1 ml-3">
-                    <CommentForm
-                        autoFocus
-                        onSubmit={onCommentReply}
-                        loading={createCommentFn.loading}
-                        error={createCommentFn.error}
-                    />
+                    <CommentForm autoFocus onSubmit={onCommentReply} loading={createCommentFn.loading} error={createCommentFn.error} />
                 </div>
             )}
             {childComments?.length > 0 && (
                 <>
-                    <div
-                        className={`nested-comments-stack ${areChildrenHidden ? "hide" : ""
-                            }`}
-                    >
-                        <button
-                            className="collapse-line"
-                            aria-label="Hide Replies"
-                            onClick={() => setAreChildrenHidden(true)}
-                        />
-                        <div className="nested-comments">
+                    <div className={`nested-comments-stack ${areChildrenHidden ? "hide" : ""}`} >
+                        <button className="collapse-line" aria-label="Hide Replies" onClick={() => setAreChildrenHidden(true)} /> <div className="nested-comments">
                             <CommentList comments={childComments} />
                         </div>
                     </div>
-                    <button
-                        className={`btn mt-1 ${!areChildrenHidden ? "hide" : ""}`}
-                        onClick={() => setAreChildrenHidden(false)}
-                    >
+                    <button className={`btn mt-1 ${!areChildrenHidden ? "hide" : ""}`} onClick={() => setAreChildrenHidden(false)} >
                         Show Replies
                     </button>
                 </>

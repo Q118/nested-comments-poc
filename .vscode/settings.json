@@ -14,4 +14,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "prettier.quoteProps": "consistent",
     "editor.tabCompletion": "on",
+    "cSpell.words": [
+        "fastify"
+    ],
 }
