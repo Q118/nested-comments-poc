@@ -1,0 +1,17 @@
+{
+    // consistent linting for sylistic issues
+    "prettier.tabWidth": 4,
+    "prettier.trailingComma": "all",
+    "prettier.useTabs": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.tabSize": 4,
+    "files.trimTrailingWhitespace": true,
+    "javascript.format.semicolons": "insert",
+    "javascript.preferences.quoteStyle": "single",
+    "typescript.format.semicolons": "insert",
+    "typescript.preferences.quoteStyle": "single",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "prettier.quoteProps": "consistent",
+    "editor.tabCompletion": "on",
+}
