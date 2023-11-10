@@ -20,7 +20,9 @@ app.addHook("onRequest", (req, res, done) => {
         res.clearCookie("userId");
         res.setCookie("userId", CURRENT_USER_ID);
     }
-    console.log(`Request received <><> ${req.cookies.userId}`);
+    console.log(`Request received <>from id<> ${req.cookies.userId}`);
+    console.log(`${req.method} ${req.url}`);
+    console.log(`${req.body}`);
     done();
 });
 const prisma = new PrismaClient();
