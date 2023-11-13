@@ -3,6 +3,14 @@
 poc of nested comments.
 
 
+<details>
+<summary>View Screenshot</summary>
+
+![screenshot](https://user-images.githubusercontent.com/62257716/282594542-23aac85e-d080-4a03-ac2d-266b04c8d84d.png)
+
+</details>
+
+
 ## How to run
 
 ```sh
