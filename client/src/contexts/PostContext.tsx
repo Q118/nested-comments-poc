@@ -5,12 +5,14 @@ import { useAsync } from "../hooks/useAsync";
 import { getPost } from "../services/posts";
 
 
-type Comment = {
+export type Comment = {
     id: string;
-    parentId: string;
+    parentId?: string;
     message: string;
-    user: string;
+    user: { id: string; name: string; };
     likeCount: number;
+    createdAt: string;
+    likedByMe: boolean;
 };
 
 export type Post = {
@@ -28,7 +30,7 @@ type PostContextType = {
     post: Post;
     rootComments: Comment[];
     getReplies: (parentId: string) => any[];
-    createLocalComment: (comment: Comment) => any;
+    createLocalComment: (comment: Partial<Comment>) => any;
     updateLocalComment: (id: string, message: string) => any;
     deleteLocalComment: (id: string) => void;
     toggleLocalCommentLike: (id: string, addLike: boolean) => any;
@@ -42,19 +44,20 @@ export function usePost() {
 
 export function PostProvider({ children }) {
     const { id = 'fake-id-i-hate-typescript' } = useParams();
-    // if (!id) const id = '0';
-    // if (id == null) let id = '0';
-    // if (!id) throw new Error('Post id is required');
     const { loading, error, value: post } = useAsync<Post>(() => getPost(id || '0'), [ id ]);
     const [ comments, setComments ] = useState<Comment[]>([]);
+
     const commentsByParentId = useMemo(() => {
         const group = {};
-        comments.forEach((comment: Comment) => {
+        comments.forEach(comment => {
+            // @ts-ignore
             group[ comment.parentId ] ||= [];
+            // @ts-ignore
             group[ comment.parentId ].push(comment);
         });
         return group;
     }, [ comments ]);
+
 
     useEffect(() => {
         if (post?.comments == null) return;
@@ -117,7 +120,8 @@ export function PostProvider({ children }) {
         <Context.Provider
             value={{
                 post: { id, ...post },
-                rootComments: commentsByParentId[ '' ],
+                // @ts-ignore
+                rootComments: commentsByParentId[ null ],
                 getReplies,
                 createLocalComment,
                 updateLocalComment,

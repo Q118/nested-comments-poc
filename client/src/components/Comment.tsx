@@ -1,6 +1,6 @@
 import { IconBtn } from "./IconBtn";
 import { FaEdit, FaHeart, FaRegHeart, FaReply, FaTrash } from "react-icons/fa";
-import { usePost } from "../contexts/PostContext";
+import { usePost, Comment as CommentType } from "../contexts/PostContext";
 import { CommentList } from "./CommentList";
 import { CommentForm } from "./CommentForm";
 import { useState } from "react";
@@ -13,18 +13,20 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
     timeStyle: "short",
 });
 
-export function Comment({ id, message, user, createdAt, likeCount, likedByMe, }) {
+type CommentProps = {
+    id: string;
+    message: string;
+    user: { id: string; name: string; };
+    createdAt: string;
+    likeCount: number;
+    likedByMe: boolean;
+};
+
+export function Comment({ id, message, user, createdAt, likeCount, likedByMe, }: CommentProps) {
     const [ areChildrenHidden, setAreChildrenHidden ] = useState(false);
     const [ isReplying, setIsReplying ] = useState(false);
     const [ isEditing, setIsEditing ] = useState(false);
-    const {
-        post,
-        getReplies,
-        createLocalComment,
-        updateLocalComment,
-        deleteLocalComment,
-        toggleLocalCommentLike,
-    } = usePost();
+    const { post, getReplies, createLocalComment, updateLocalComment, deleteLocalComment, toggleLocalCommentLike, } = usePost();
     const createCommentFn = useAsyncFn(createComment);
     const updateCommentFn = useAsyncFn(updateComment);
     const deleteCommentFn = useAsyncFn(deleteComment);
@@ -35,7 +37,7 @@ export function Comment({ id, message, user, createdAt, likeCount, likedByMe, })
     function onCommentReply(message: any) {
         return createCommentFn
             .execute({ postId: post.id, message, parentId: id })
-            .then((comment: { id: string; parentId: string; message: string; user: string; likeCount: number; }) => {
+            .then((comment: CommentType) => {
                 setIsReplying(false);
                 createLocalComment(comment);
             });

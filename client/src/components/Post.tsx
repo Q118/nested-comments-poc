@@ -8,7 +8,10 @@ export function Post() {
     const { post, rootComments, createLocalComment } = usePost();
     const { loading, error, execute: createCommentFn } = useAsyncFn(createComment);
 
-    function onCommentCreate(message) {
+    console.log('rootComments: ', rootComments);
+
+    function onCommentCreate(message: string) {
+        // debugger;
         return createCommentFn({ postId: post.id, message }).then(
             createLocalComment
         );

@@ -22,13 +22,12 @@ app.addHook("onRequest", (req, res, done) => {
     }
     console.log(`Request received <>from id<> ${req.cookies.userId}`);
     console.log(`${req.method} ${req.url}`);
-    console.log(`${req.body}`);
     done();
 });
 const prisma = new PrismaClient();
-const CURRENT_USER_ID = (
-    await prisma.user.findFirst({ where: { name: "Kyle" } })
-).id;
+
+const CURRENT_USER_ID = (await prisma.user.findFirst({ where: { name: "Kyle" } })).id;
+
 const COMMENT_SELECT_FIELDS = {
     id: true,
     message: true,
